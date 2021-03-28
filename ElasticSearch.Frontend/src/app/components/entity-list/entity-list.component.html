@@ -1,0 +1,16 @@
+<div class="justify-content-center">
+  <div class="row">
+    <div class="col">
+      <app-search-panel (search)="searchEntity($event)"></app-search-panel>
+    </div>
+  </div>
+
+  <div class="row row-cols-2">
+    <div class="col" *ngFor="let entity of entities$ | async">
+      <app-entity-list-item
+        [entity]="entity"
+        (removeEntity)="removeEntity($event)"
+      ></app-entity-list-item>
+    </div>
+  </div>
+</div>

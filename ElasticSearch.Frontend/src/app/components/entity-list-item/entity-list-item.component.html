@@ -1,0 +1,17 @@
+<div class="card mb-3">
+  <div class="card-header text-center">
+    <h6>{{ entity.name }}</h6>
+  </div>
+  <div class="card-body">
+    <h6 class="card-title">Описание:</h6>
+    <span class="card-text">{{ entity.description }}</span>
+  </div>
+  <div class="card-footer d-flex justify-content-end">
+    <button class="btn btn-outline-primary mr-2" (click)="onEdit()">
+      <i class="bi bi-pencil-fill mr-1"></i>Изменить
+    </button>
+    <button class="btn btn-outline-danger" (click)="onRemove()">
+      <i class="bi bi-trash-fill mr-1"></i>Удалить
+    </button>
+  </div>
+</div>

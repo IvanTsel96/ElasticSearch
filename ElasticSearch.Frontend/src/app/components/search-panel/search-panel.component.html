@@ -1,0 +1,11 @@
+<div class="input-group mt-5 mb-5">
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Поиск..."
+    [(ngModel)]="searchPhrase"
+  />
+  <button class="btn btn-outline-primary" type="button" (click)="onSearch()">
+    <i class="bi bi-search mr-1"></i>Поиск
+  </button>
+</div>
