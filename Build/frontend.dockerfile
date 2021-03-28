@@ -1,10 +1,10 @@
 FROM node:14-alpine AS build
 WORKDIR /app/src
 
-COPY ./source/package.json ./source/package-lock.json ./
+COPY ./package.json ./package-lock.json ./
 RUN npm install
 
-COPY ./source ./
+COPY ./ ./
 RUN npm run build:prod
 
 FROM nginx:1.19-alpine AS final
