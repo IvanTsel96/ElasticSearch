@@ -1,4 +1,5 @@
-﻿using ElasticSearch.API.Domain;
+﻿using Elasticsearch.Net;
+using ElasticSearch.API.Domain;
 using ElasticSearch.API.Domain.Constants;
 using Nest;
 using System;
@@ -26,7 +27,7 @@ namespace ElasticSearch.API.DAL.ElasticSearch
                 await CreateIndex(Indexes.Entities);
             }
 
-            await _elasticClient.IndexAsync(document, i => i.Index(Indexes.Entities));
+            await _elasticClient.IndexAsync(document, i => i.Index(Indexes.Entities).Refresh(Refresh.WaitFor));
         }
 
         public async Task IndexDocuments<T>(IList<T> documents) where T : class
@@ -111,7 +112,6 @@ namespace ElasticSearch.API.DAL.ElasticSearch
                                         .Tokenizer("standard")
                                         .Filters("lowercase", "synonymRu", "hunspellRu", "stopWordRu")))
                     )
-                    .RequestsCacheEnabled(false)
                 )
                 .Map<Entity>(map => map.Properties(descriptor => descriptor
                     .Text(textDescriptor => textDescriptor

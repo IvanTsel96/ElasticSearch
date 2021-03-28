@@ -40,6 +40,7 @@ namespace ElasticSearch.API.Business.EntitySearchService
         public async Task<List<EntityResponse>> Search(string searchPhrase)
         {
             var entityIds = await _elasticSearchProvider.Search(searchPhrase);
+
             var entities = await _entityRepository.GetByIds(entityIds);
 
             return _mapper.Map<List<EntityResponse>>(entities);
