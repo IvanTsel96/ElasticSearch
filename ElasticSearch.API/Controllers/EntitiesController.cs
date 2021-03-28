@@ -29,6 +29,12 @@ namespace ElasticSearch.API.Controllers
             return _entityService.Get();
         }
 
+        [HttpGet("{id}")]
+        public Task<EntityResponse> GetById([FromRoute] int id)
+        {
+            return _entityService.GetById(id);
+        }
+
         [HttpGet("search")]
         public Task<List<Entity>> Search([FromQuery] string searchPhrase)
         {

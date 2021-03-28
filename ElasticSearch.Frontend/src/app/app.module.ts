@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,8 +12,7 @@ import { EntityDetailsComponent } from './components/entity-details/entity-detai
 import { EntityListComponent } from './components/entity-list/entity-list.component';
 import { EntityListItemComponent } from './components/entity-list-item/entity-list-item.component';
 import { SearchPanelComponent } from './components/search-panel/search-panel.component';
-
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { ModalService } from './core/modal/modal.service';
 
 @NgModule({
   declarations: [
@@ -25,10 +26,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     AppRoutingModule,
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
-    ModalModule.forRoot(),
+    NgbModule,
   ],
-  providers: [ApiClient],
+  providers: [ModalService, ApiClient],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

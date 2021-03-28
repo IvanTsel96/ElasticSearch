@@ -20,7 +20,7 @@ namespace ElasticSearch.API.DAL
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Entity>().ToTable("entities").HasKey(x => x.Id);
-            modelBuilder.Entity<Entity>().Property(x => x.CreateDate).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Entity>().Property(x => x.CreateDate).HasDefaultValueSql("current_date");
 
             modelBuilder.Entity<Entity>().HasData(GetDefaultData());
         }
