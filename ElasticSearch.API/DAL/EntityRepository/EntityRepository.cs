@@ -1,6 +1,7 @@
 ﻿using ElasticSearch.API.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElasticSearch.API.DAL.EntityRepository
@@ -22,6 +23,11 @@ namespace ElasticSearch.API.DAL.EntityRepository
         public Task<Entity> GetById(int id)
         {
             return _context.Entities.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public Task<List<Entity>> GetByIds(IList<int> ids)
+        {
+            return _context.Entities.Where(x => ids.Contains(x.Id)).ToListAsync();
         }
 
         public Task Save(Entity entity)

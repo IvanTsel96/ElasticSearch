@@ -1,7 +1,6 @@
-﻿using ElasticSearch.API.Business.EntityService;
+﻿using ElasticSearch.API.Business.EntitySearchService;
+using ElasticSearch.API.Business.EntityService;
 using ElasticSearch.API.Business.EntityService.Dtos;
-using ElasticSearch.API.DAL.ElasticSearch;
-using ElasticSearch.API.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,14 +12,14 @@ namespace ElasticSearch.API.Controllers
     public class EntitiesController : ControllerBase
     {
         private readonly IEntityService _entityService;
-        private readonly IElasticSearchProvider _elasticSearchProvider;
+        private readonly IEntitySearchService _entitySearchService;
 
         public EntitiesController(
             IEntityService entityService,
-            IElasticSearchProvider elasticSearchProvider)
+            IEntitySearchService entitySearchService)
         {
             _entityService = entityService;
-            _elasticSearchProvider = elasticSearchProvider;
+            _entitySearchService = entitySearchService;
         }
 
         [HttpGet]
@@ -36,9 +35,9 @@ namespace ElasticSearch.API.Controllers
         }
 
         [HttpGet("search")]
-        public Task<List<Entity>> Search([FromQuery] string searchPhrase)
+        public Task<List<EntityResponse>> Search([FromQuery] string searchPhrase)
         {
-            return _elasticSearchProvider.Search(searchPhrase);
+            return _entitySearchService.Search(searchPhrase);
         }
 
         [HttpPost]

@@ -3,6 +3,7 @@ using ElasticSearch.API.Domain.Constants;
 using Nest;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElasticSearch.API.DAL.ElasticSearch
@@ -40,10 +41,25 @@ namespace ElasticSearch.API.DAL.ElasticSearch
             await _elasticClient.IndexManyAsync(documents, Indexes.Entities);
         }
 
-        public async Task<List<Entity>> Search(string searchPhrase)
+        public async Task RemoveDocument<T>(int id) where T : class
+        {
+            var isIndexExist = await IsIndexExists(Indexes.Entities);
+
+            if (!isIndexExist)
+            {
+                await CreateIndex(Indexes.Entities);
+            }
+
+            await _elasticClient.DeleteAsync<T>(id, i => i.Index(Indexes.Entities));
+        }
+
+        public async Task<List<int>> Search(string searchPhrase)
         {
             var response = await _elasticClient.SearchAsync<Entity>(s => s
                 .Index(Indexes.Entities)
+                .Source(sourceDescription => sourceDescription.
+                    Includes(fieldsDescription => fieldsDescription
+                        .Field(entity => entity.Id)))
                 .Query(q => q
                     .Bool(s => s
                         .Should(qs =>
@@ -62,7 +78,7 @@ namespace ElasticSearch.API.DAL.ElasticSearch
 
                     )));
 
-            return (List<Entity>)response.Documents;
+            return response.Documents.Select(x => x.Id).ToList();
         }
 
         private async Task<bool> IsIndexExists(string indexName)
@@ -75,8 +91,8 @@ namespace ElasticSearch.API.DAL.ElasticSearch
         private async Task CreateIndex(string indexName)
         {
             var response = await _elasticClient.Indices.CreateAsync(indexName, index => index
-                .Settings(settings =>
-                        settings.Analysis(analysis =>
+                .Settings(settings => settings
+                    .Analysis(analysis =>
                             analysis.TokenFilters(filter => filter
                                     .Stop("stopWordRu", x => x.StopWords(new StopWords("_russian_")))
                                     .Hunspell("hunspellRu", x => x.Locale("ru_RU"))
@@ -94,7 +110,8 @@ namespace ElasticSearch.API.DAL.ElasticSearch
                                     .Custom("synonym", x => x
                                         .Tokenizer("standard")
                                         .Filters("lowercase", "synonymRu", "hunspellRu", "stopWordRu")))
-                        )
+                    )
+                    .RequestsCacheEnabled(false)
                 )
                 .Map<Entity>(map => map.Properties(descriptor => descriptor
                     .Text(textDescriptor => textDescriptor

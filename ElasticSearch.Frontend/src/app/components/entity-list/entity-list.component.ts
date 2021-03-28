@@ -1,10 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { ApiClient } from 'src/app/core/api-client/api-client';
 import { ModalService } from 'src/app/core/modal/modal.service';
 import { EntityDetailsComponent } from '../entity-details/entity-details.component';
 import { Entity } from '../entity.model';
+import { SearchService } from '../search-panel/search.service';
 
 @Component({
   selector: 'app-entity-list',
@@ -16,7 +22,8 @@ export class EntityListComponent implements OnInit, OnDestroy {
   private readonly subscriptionDestroyer$ = new Subject<boolean>();
 
   constructor(
-    private modalService: ModalService,
+    private readonly searchService: SearchService,
+    private readonly modalService: ModalService,
     private readonly apiClient: ApiClient
   ) {}
 
@@ -25,21 +32,22 @@ export class EntityListComponent implements OnInit, OnDestroy {
   }
 
   public loadEntities(): void {
-    this.entities$ = this.apiClient
-      .getData<Entity[]>('/entities')
-      .pipe(takeUntil(this.subscriptionDestroyer$));
-  }
-
-  public searchEntity(searchPhrase: string): void {
-    this.entities$ = this.apiClient
-      .getData<Entity[]>('/entities/search', { searchPhrase })
-      .pipe(takeUntil(this.subscriptionDestroyer$));
+    this.entities$ = this.searchService.getSearchPhrase().pipe(
+      switchMap((searchPhrase: string) =>
+        searchPhrase
+          ? this.apiClient.getData<Entity[]>('/entities/search', {
+              searchPhrase,
+            })
+          : this.apiClient.getData<Entity[]>('/entities')
+      ),
+      takeUntil(this.subscriptionDestroyer$)
+    );
   }
 
   public addEntity(): void {
     this.modalService.showModal(EntityDetailsComponent).then(
-      (isSaved: boolean) => {
-        if (isSaved) {
+      (isSuccessed: boolean) => {
+        if (isSuccessed) {
           this.loadEntities();
         }
       },

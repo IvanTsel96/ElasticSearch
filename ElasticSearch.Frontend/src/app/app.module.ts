@@ -13,6 +13,7 @@ import { EntityListComponent } from './components/entity-list/entity-list.compon
 import { EntityListItemComponent } from './components/entity-list-item/entity-list-item.component';
 import { SearchPanelComponent } from './components/search-panel/search-panel.component';
 import { ModalService } from './core/modal/modal.service';
+import { SearchService } from './components/search-panel/search.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { ModalService } from './core/modal/modal.service';
     HttpClientModule,
     NgbModule,
   ],
-  providers: [ModalService, ApiClient],
+  providers: [ModalService, SearchService, ApiClient],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

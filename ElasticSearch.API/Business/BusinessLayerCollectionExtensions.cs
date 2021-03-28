@@ -1,4 +1,5 @@
-﻿using ElasticSearch.API.Business.EntityService;
+﻿using ElasticSearch.API.Business.EntitySearchService;
+using ElasticSearch.API.Business.EntityService;
 using ElasticSearch.API.Business.EntityService.Mapping;
 using ElasticSearch.API.DAL;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ namespace ElasticSearch.API.Business
     {
         public static IServiceCollection AddBusiness(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<IEntitySearchService, EntitySearchService.EntitySearchService>();
             services.AddScoped<IEntityService, EntityService.EntityService>();
 
             services.AddAutoMapper(typeof(EntityProfile))

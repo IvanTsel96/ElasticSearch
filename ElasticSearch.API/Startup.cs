@@ -41,7 +41,6 @@ namespace ElasticSearch.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
             }
 
             app.UseCors(AllowSpecificOrigin);

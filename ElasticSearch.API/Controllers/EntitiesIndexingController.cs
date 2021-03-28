@@ -1,5 +1,4 @@
-﻿using ElasticSearch.API.Business.EntityService;
-using ElasticSearch.API.DAL.ElasticSearch;
+﻿using ElasticSearch.API.Business.EntitySearchService;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,31 +8,23 @@ namespace ElasticSearch.API.Controllers
     [Route("entities/index")]
     public class EntitiesIndexingController
     {
-        private readonly IEntityService _entityService;
-        private readonly IElasticSearchProvider _elasticSearchProvider;
+        private readonly IEntitySearchService _entitySearchService;
 
-        public EntitiesIndexingController(
-            IEntityService entityService,
-            IElasticSearchProvider elasticSearchProvider)
+        public EntitiesIndexingController(IEntitySearchService elasticSearchProvider)
         {
-            _entityService = entityService;
-            _elasticSearchProvider = elasticSearchProvider;
+            _entitySearchService = elasticSearchProvider;
         }
 
         [HttpPost]
-        public async Task Index()
+        public Task Index()
         {
-            var entities = await _entityService.Get();
-
-            await _elasticSearchProvider.IndexDocuments(entities);
+            return _entitySearchService.Index();
         }
 
         [HttpPost("{id}")]
-        public async Task IndexById([FromRoute] int id)
+        public Task IndexById([FromRoute] int id)
         {
-            var entity = await _entityService.GetById(id);
-
-            await _elasticSearchProvider.IndexDocument(entity);
+            return _entitySearchService.IndexById(id);
         }
     }
 }

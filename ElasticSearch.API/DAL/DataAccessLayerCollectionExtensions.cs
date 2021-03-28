@@ -12,11 +12,11 @@ namespace ElasticSearch.API.DAL
     {
         public static IServiceCollection AddDal(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddPostgreSql(configuration)
-                    .AddElasticSearch(configuration);
-
             services.AddScoped<IElasticSearchProvider, ElasticSearchProvider>();
             services.AddScoped<IEntityRepository, EntityRepository.EntityRepository>();
+
+            services.AddPostgreSql(configuration)
+                    .AddElasticSearch(configuration);
 
             return services;
         }

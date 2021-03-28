@@ -8,6 +8,7 @@ namespace ElasticSearch.API.DAL.EntityRepository
     {
         Task<List<Entity>> Get();
         Task<Entity> GetById(int id);
+        Task<List<Entity>> GetByIds(IList<int> ids);
         Task Save(Entity entity);
         Task Update(Entity entity);
         Task Delete(Entity entity);

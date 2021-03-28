@@ -1,5 +1,4 @@
-﻿using ElasticSearch.API.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ElasticSearch.API.DAL.ElasticSearch
@@ -8,7 +7,8 @@ namespace ElasticSearch.API.DAL.ElasticSearch
     {
         Task IndexDocument<T>(T document) where T : class;
         Task IndexDocuments<T>(IList<T> document) where T : class;
+        Task RemoveDocument<T>(int id) where T : class;
 
-        Task<List<Entity>> Search(string searchPhrase);
+        Task<List<int>> Search(string searchPhrase);
     }
 }
