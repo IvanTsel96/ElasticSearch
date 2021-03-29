@@ -3,6 +3,7 @@ using ElasticSearch.API.Business.EntityService.Dtos;
 using ElasticSearch.API.DAL.ElasticSearch;
 using ElasticSearch.API.DAL.EntityRepository;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElasticSearch.API.Business.EntitySearchService
@@ -41,7 +42,9 @@ namespace ElasticSearch.API.Business.EntitySearchService
         {
             var entityIds = await _elasticSearchProvider.Search(searchPhrase);
 
-            var entities = await _entityRepository.GetByIds(entityIds);
+            var entities = (await _entityRepository.GetByIds(entityIds))
+                .OrderBy(x => entityIds.IndexOf(x.Id))
+                .ToList();
 
             return _mapper.Map<List<EntityResponse>>(entities);
         }

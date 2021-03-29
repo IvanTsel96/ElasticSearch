@@ -1,3 +1,4 @@
+using ElasticSearch.API.BackgroundServices;
 using ElasticSearch.API.Business;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,8 @@ namespace ElasticSearch.API
             });
 
             services.AddBusiness(_configuration);
+
+            services.AddHostedService<CreateIndexHostService>();
 
             services.AddControllers();
         }
